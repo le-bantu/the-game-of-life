@@ -28,12 +28,47 @@
             font-weight: 300;
             font-size: 2.5em;
         }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(5, 60px);
+            grid-template-rows: repeat(5, 60px);
+            gap: 4px;
+            margin: 20px auto;
+            justify-content: center;
+        }
+        .cell {
+            width: 60px;
+            height: 60px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .alive {
+            background: rgba(76, 175, 80, 0.8);
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.4);
+        }
+        .dead {
+            background: rgba(255, 255, 255, 0.1);
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1 th:text="${title}">Jeu de la Vie</h1>
-        <p>Application en cours de développement...</p>
+        
+        <div class="grid">
+            <div th:each="i : ${#numbers.sequence(0, grid.rows - 1)}">
+                <div th:each="j : ${#numbers.sequence(0, grid.cols - 1)}"
+                     th:classappend="${grid.getCell(i, j)} ? 'cell alive' : 'cell dead'">
+                    <span th:text="${grid.getCell(i, j)} ? '■' : '□'"></span>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </body>
 </html>
