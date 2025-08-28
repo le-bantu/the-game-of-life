@@ -19,12 +19,18 @@ public class GameOfLifeApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("Démarrage du Jeu de la Vie...");
+        System.out.println("=== DÉMARRAGE DU JEU DE LA VIE ===");
+        
         gameService.initializeGame();
         
-        System.out.println("Simulation de 2 générations en console:");
-        for (int i = 0; i < 2; i++) {
-            gameService.nextGeneration();
-        }
+        System.out.println("Simulation de 4 générations avec délai de 500ms:");
+        gameService.runGenerations(4, 500);
+        
+        System.out.println("Test de la boucle automatique (3 secondes):");
+        gameService.startSimulation(300);
+        Thread.sleep(3000);
+        gameService.stopSimulation();
+        
+        System.out.println("=== SIMULATION TERMINÉE ===");
     }
 }

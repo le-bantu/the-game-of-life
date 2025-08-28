@@ -17,50 +17,44 @@ public class GameController {
 
     @GetMapping("/")
     public String home(Model model) {
-        model.addAttribute("title", "Jeu de la Vie");
-        model.addAttribute("grid", gameService.getGrid());
-        model.addAttribute("gridState", gameService.getGrid().getGridState());
-        model.addAttribute("generation", gameService.getGeneration());
-        model.addAttribute("running", gameService.isRunning());
-        model.addAttribute("elapsedTime", gameService.getElapsedTime());
+        updateModel(model, "Jeu de la Vie");
         return "index";
     }
 
     @PostMapping("/next")
     public String nextGeneration(Model model) {
         gameService.nextGeneration();
-        updateModel(model);
+        updateModel(model, "Jeu de la Vie - Génération " + gameService.getGeneration());
         return "index";
     }
 
     @PostMapping("/start")
     public String startSimulation(@RequestParam(defaultValue = "1000") int delay, Model model) {
         gameService.startSimulation(delay);
-        updateModel(model);
+        updateModel(model, "Jeu de la Vie - En cours...");
         return "index";
     }
 
     @PostMapping("/stop")
     public String stopSimulation(Model model) {
         gameService.stopSimulation();
-        updateModel(model);
+        updateModel(model, "Jeu de la Vie - Arrêté");
         return "index";
     }
 
     @PostMapping("/reset")
     public String resetGame(Model model) {
         gameService.initializeGame();
-        updateModel(model);
+        updateModel(model, "Jeu de la Vie - Réinitialisé");
         return "index";
     }
 
-    private void updateModel(Model model) {
-        model.addAttribute("title", "Jeu de la Vie - Génération " + gameService.getGeneration());
+    private void updateModel(Model model, String title) {
+        model.addAttribute("title", title);
         model.addAttribute("grid", gameService.getGrid());
         model.addAttribute("gridState", gameService.getGrid().getGridState());
         model.addAttribute("generation", gameService.getGeneration());
         model.addAttribute("running", gameService.isRunning());
         model.addAttribute("elapsedTime", gameService.getElapsedTime());
     }
-
 }

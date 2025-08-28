@@ -150,9 +150,7 @@
         </div>
         
         <div class="controls">
-            <form method="post" th:action="@{/next}">
-                <button type="submit">Génération Suivante</button>
-            </form>
+            
             
             <form method="post" th:action="@{/start}">
                 <div class="delay-control">
@@ -160,6 +158,10 @@
                     <input type="number" name="delay" value="1000" min="100" max="5000">
                     <button type="submit" th:disabled="${running}">Démarrer Auto</button>
                 </div>
+            </form>
+            
+            <form method="post" th:action="@{/next}">
+                <button type="submit">Génération Suivante</button>
             </form>
             
             <form method="post" th:action="@{/stop}">

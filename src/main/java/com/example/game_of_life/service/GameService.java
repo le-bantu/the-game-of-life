@@ -14,6 +14,7 @@ public class GameService {
     private int generation;
     private boolean running;
     private long startTime;
+    private Thread simulationThread;
 
     public void initializeGame() {
         grid = new Grid();
@@ -28,7 +29,6 @@ public class GameService {
     public void nextGeneration() {
         grid.nextGeneration();
         generation++;
-        
         consoleDisplay.displayGridWithInfo(grid, generation);
     }
 
@@ -36,25 +36,30 @@ public class GameService {
         if (running) return;
         
         running = true;
-        new Thread(() -> {
-            while (running) {
+        simulationThread = new Thread(() -> {
+            while (running && !Thread.currentThread().isInterrupted()) {
                 nextGeneration();
                 try {
                     Thread.sleep(delayMs);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
-                    running = false;
+                    break;
                 }
             }
-        }).start();
+            running = false;
+        });
+        simulationThread.start();
     }
 
     public void stopSimulation() {
         running = false;
+        if (simulationThread != null && simulationThread.isAlive()) {
+            simulationThread.interrupt();
+        }
     }
 
     public void runGenerations(int count, int delayMs) {
-        for (int i = 0; i < count; i++) {
+        for (int i = 0; i < count && !Thread.currentThread().isInterrupted(); i++) {
             nextGeneration();
             if (delayMs > 0) {
                 try {
