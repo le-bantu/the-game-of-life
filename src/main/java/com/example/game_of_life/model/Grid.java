@@ -46,11 +46,11 @@ public class Grid {
         
         for (int x = -1; x <= 1; x++) {
             for (int y = -1; y <= 1; y++) {
-                if (x == 0 && y == 0) continue; 
+                if (x == 0 && y == 0) continue;
                 
-                int ni = row + x; 
-                int nj = col + y; 
-
+                int ni = row + x;
+                int nj = col + y;
+                
                 if (ni >= 0 && ni < ROWS && nj >= 0 && nj < COLS) {
                     if (cells[ni][nj]) {
                         count++;
@@ -60,6 +60,24 @@ public class Grid {
         }
         
         return count;
+    }
+    
+    public void nextGeneration() {
+        boolean[][] nextGen = new boolean[ROWS][COLS];
+        
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                int liveNeighbors = countLiveNeighbors(i, j);
+                
+                if (cells[i][j]) {
+                    nextGen[i][j] = (liveNeighbors == 2 || liveNeighbors == 3);
+                } else {
+                    nextGen[i][j] = (liveNeighbors == 3);
+                }
+            }
+        }
+        
+        cells = nextGen;
     }
     
     public String getGridState() {
