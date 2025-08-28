@@ -59,6 +59,7 @@
             justify-content: center;
             gap: 15px;
             margin: 25px 0;
+            flex-wrap: wrap;
         }
         button {
             background: rgba(255, 255, 255, 0.2);
@@ -69,14 +70,26 @@
             cursor: pointer;
             font-size: 16px;
             transition: all 0.3s ease;
+            min-width: 120px;
         }
         button:hover {
             background: rgba(255, 255, 255, 0.3);
             transform: translateY(-2px);
         }
+        button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
         .generation-info {
             text-align: center;
             font-size: 18px;
+            margin-bottom: 10px;
+        }
+        .stats-info {
+            text-align: center;
+            font-size: 14px;
+            opacity: 0.8;
             margin-bottom: 20px;
         }
         .debug-info {
@@ -89,6 +102,22 @@
             max-width: 200px;
             text-align: center;
         }
+        .delay-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+        }
+        input[type="number"] {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 4px;
+            width: 60px;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +126,10 @@
         
         <div class="generation-info">
             Génération: <strong th:text="${generation}">0</strong>
+        </div>
+        
+        <div class="stats-info" th:if="${elapsedTime}">
+            Temps écoulé: <strong th:text="${elapsedTime}">0</strong> ms
         </div>
         
         <div class="grid">
@@ -118,8 +151,23 @@
         
         <div class="controls">
             <form method="post" th:action="@{/next}">
-                <input type="hidden" name="generation" th:value="${generation}">
                 <button type="submit">Génération Suivante</button>
+            </form>
+            
+            <form method="post" th:action="@{/start}">
+                <div class="delay-control">
+                    <label>Délai (ms):</label>
+                    <input type="number" name="delay" value="1000" min="100" max="5000">
+                    <button type="submit" th:disabled="${running}">Démarrer Auto</button>
+                </div>
+            </form>
+            
+            <form method="post" th:action="@{/stop}">
+                <button type="submit" th:disabled="${!running}">Arrêter</button>
+            </form>
+            
+            <form method="post" th:action="@{/reset}">
+                <button type="submit">Réinitialiser</button>
             </form>
         </div>
         

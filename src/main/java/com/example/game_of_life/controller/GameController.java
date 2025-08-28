@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.example.game_of_life.model.Grid;
 import com.example.game_of_life.service.GameService;
 
 @Controller
@@ -18,26 +17,50 @@ public class GameController {
 
     @GetMapping("/")
     public String home(Model model) {
-        gameService.initializeGame();
-        Grid grid = gameService.getGrid();
-        
         model.addAttribute("title", "Jeu de la Vie");
-        model.addAttribute("grid", grid);
-        model.addAttribute("gridState", grid.getGridState());
+        model.addAttribute("grid", gameService.getGrid());
+        model.addAttribute("gridState", gameService.getGrid().getGridState());
         model.addAttribute("generation", gameService.getGeneration());
+        model.addAttribute("running", gameService.isRunning());
+        model.addAttribute("elapsedTime", gameService.getElapsedTime());
         return "index";
     }
 
     @PostMapping("/next")
-    public String nextGeneration(@RequestParam int generation, Model model) {
+    public String nextGeneration(Model model) {
         gameService.nextGeneration();
-        Grid grid = gameService.getGrid();
-        
-        model.addAttribute("title", "Jeu de la Vie - Génération " + gameService.getGeneration());
-        model.addAttribute("grid", grid);
-        model.addAttribute("gridState", grid.getGridState());
-        model.addAttribute("generation", gameService.getGeneration());
+        updateModel(model);
         return "index";
+    }
+
+    @PostMapping("/start")
+    public String startSimulation(@RequestParam(defaultValue = "1000") int delay, Model model) {
+        gameService.startSimulation(delay);
+        updateModel(model);
+        return "index";
+    }
+
+    @PostMapping("/stop")
+    public String stopSimulation(Model model) {
+        gameService.stopSimulation();
+        updateModel(model);
+        return "index";
+    }
+
+    @PostMapping("/reset")
+    public String resetGame(Model model) {
+        gameService.initializeGame();
+        updateModel(model);
+        return "index";
+    }
+
+    private void updateModel(Model model) {
+        model.addAttribute("title", "Jeu de la Vie - Génération " + gameService.getGeneration());
+        model.addAttribute("grid", gameService.getGrid());
+        model.addAttribute("gridState", gameService.getGrid().getGridState());
+        model.addAttribute("generation", gameService.getGeneration());
+        model.addAttribute("running", gameService.isRunning());
+        model.addAttribute("elapsedTime", gameService.getElapsedTime());
     }
 
 }
