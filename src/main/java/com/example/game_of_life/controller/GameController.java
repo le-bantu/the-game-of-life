@@ -14,9 +14,15 @@ public class GameController {
         Grid grid = new Grid();
         grid.initializeWithBlinker();
         
+        int neighbors = grid.countLiveNeighbors(2, 2); 
+        int edgeNeighbors = grid.countLiveNeighbors(1, 2); 
+        
         model.addAttribute("title", "Jeu de la Vie");
         model.addAttribute("grid", grid);
+        model.addAttribute("neighbors", neighbors);
+        model.addAttribute("edgeNeighbors", edgeNeighbors);
+        model.addAttribute("gridState", grid.getGridState());
         return "index";
     }
-    
+
 }

@@ -54,6 +54,20 @@
         .dead {
             background: rgba(255, 255, 255, 0.1);
         }
+        .info-panel {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .debug-info {
+            font-family: monospace;
+            white-space: pre-wrap;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -66,6 +80,20 @@
                      th:classappend="${grid.getCell(i, j)} ? 'cell alive' : 'cell dead'">
                     <span th:text="${grid.getCell(i, j)} ? '■' : '□'"></span>
                 </div>
+            </div>
+        </div>
+        
+        <div class="info-panel">
+            <h3>Algorithm de Voisinage Implémenté</h3>
+            <p>Nombre de voisins vivants pour la cellule (2,2): <strong th:text="${neighbors}">2</strong></p>
+            <p>Nombre de voisins vivants pour la cellule (1,2): <strong th:text="${edgeNeighbors}">1</strong></p>
+            
+            <div class="debug-info" th:text="${gridState}">
+                □ □ □ □ □
+                □ □ ■ □ □
+                □ □ ■ □ □
+                □ □ ■ □ □
+                □ □ □ □ □
             </div>
         </div>
         
